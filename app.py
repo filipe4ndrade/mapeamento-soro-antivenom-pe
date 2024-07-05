@@ -10,7 +10,7 @@ from streamlit_folium import st_folium, folium_static
 
 # Configurações da página
 st.set_page_config(
-    page_title="Buscador de Soros Antiveneno em Pernambuco",
+    page_title="Mapeamento de Soros Antiveneno em Pernambuco",
     page_icon='doc/cobra.png',
     layout="wide",
     initial_sidebar_state='collapsed'
@@ -19,7 +19,7 @@ st.set_page_config(
 col1, col2, col3 = st.columns([1,4,1])
 
 col1.image('doc/cobra.png', width=200)
-col2.title('Buscador de Soros Antiveneno em Pernambuco')
+col2.title('Mapeamento de Soros Antiveneno em Pernambuco')
 #col3.image('doc/deptEngBio.png', width=300)
 
 st.markdown(
