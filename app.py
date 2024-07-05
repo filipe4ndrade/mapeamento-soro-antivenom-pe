@@ -28,7 +28,7 @@ st.markdown(
     p {
         font-weight: bold; /* Negrito */
     }
-    .st-emotion-cache-1jzia57.e1nzilvr2 {
+    .st-emotion-cache-10trblm.e1nzilvr1 {
         color: #FF5733; 
     }
     </style>
