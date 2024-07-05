@@ -10,7 +10,7 @@ from streamlit_folium import st_folium, folium_static
 
 # Configurações da página
 st.set_page_config(
-    page_title="Mapeamento de Soros Antiveneno em Pernambuco",
+    page_title="Buscador de Soros Antiveneno em Pernambuco",
     page_icon='doc/cobra.png',
     layout="wide",
     initial_sidebar_state='collapsed'
@@ -19,7 +19,7 @@ st.set_page_config(
 col1, col2, col3 = st.columns([1,4,1])
 
 col1.image('doc/cobra.png', width=200)
-col2.title('Mapeamento de Soros Antiveneno em Pernambuco')
+col2.title('Buscador de Soros Antiveneno em Pernambuco')
 #col3.image('doc/deptEngBio.png', width=300)
 
 st.markdown(
@@ -47,12 +47,12 @@ with col2:
             """,
             unsafe_allow_html=True,
         )
-        
-        
+
+
         dados_geral = pd.read_csv('doc/hospital_mais_proximo.csv')
         cidades = pd.read_csv('doc/latitude-longitude-cidades.csv')
         cidades = cidades[cidades['uf'] == 'PE']
-        
+
         lista_mun_distinct = sorted(cidades['municipio'].unique())
 
         #municipios
@@ -66,51 +66,51 @@ with col2:
             )
             animal = st.selectbox("Qual tipo de animal causou o acidente?", dados_geral['animal'].unique(), index=None, placeholder="Selecione o animal")
             soro = st.selectbox('Soro Antiveneno', dados_geral[dados_geral['animal']==animal]['soro'].unique(), index=None, placeholder="Selecione o Soro Antiveneno")
-                
+
             try: 
                 container = st.container(border=True)
                 with container: 
                      st.write(soro, dicionario_explicacao[soro])
             except: 
                 st.write("")
-        
+
             mun_origem = st.selectbox('Município onde está o paciente', lista_mun_distinct, index=None, placeholder="Selecione o município onde está o paciente")
-        
+
             try:
-                
+
                 #Filtro destino
                 filtro = (dados_geral['soro'] == soro)&(dados_geral['cidade_origem'] == mun_origem)
                 municipio_origem = dados_geral[filtro]
                 municipio_origem['Legenda'] = 'Origem'
-                
+
                 #municipio_origem = municipio_origem.reset_index(drop=True)
                 mun_destino = municipio_origem.dropna()['cidade_hospital'].values[0]
-                    
+
                 filtro_destino = (dados_geral['soro'] == soro)&(dados_geral['cidade_origem'] == mun_destino)
                 municipio_destino = dados_geral[filtro_destino].dropna()
                 municipio_destino['Legenda'] = 'Destino'
-            
+
                 latitude_media = (municipio_origem['latitude_origem'].values[0] + municipio_destino['latitude_hospital'].values[0])/2
                 longitude_media = (municipio_origem['longitude_origem'].values[0] + municipio_destino['longitude_hospital'].values[0])/2 
-    
+
                 mapa = folium.Map([latitude_media,  longitude_media], zoom_start=9.6)
-            
+
                 folium.Marker(
                     location= [municipio_origem['latitude_origem'].values, municipio_origem['longitude_origem'].values],
                     tooltip="Origem",
                     popup="Você está aqui",
                     icon=folium.Icon(color="green",icon="house",prefix="fa"),
                 ).add_to(mapa)
-                
+
                 folium.Marker(
                     location= [municipio_destino['latitude_hospital'].values, municipio_destino['longitude_hospital'].values],
                     tooltip="Destino",
                     popup=f"O soro está aqui, na cidade de {municipio_destino['cidade_hospital'].values[0]}, {municipio_destino['hospital'].values[0]}",
                     icon=folium.Icon(color="red", icon="hospital",prefix="fa"),
                 ).add_to(mapa)
-                
+
                 #folium.TileLayer('MapQuest Open Aerial').add_to(mapa)
-            
+
                 with col4: 
                     st.subheader('Hospital mais próximo')
                     st_data = folium_static(mapa, width=710, height=500)
@@ -133,19 +133,19 @@ with col2:
                     if soro:
                         filtro = (dados_geral['soro'] == soro)&(dados_geral['animal'] == animal)
                         dados_mapa_vazio = dados_geral[filtro]
-                    
+
                     elif animal:
                         filtro = (dados_geral['animal'] == animal)
                         dados_mapa_vazio = dados_geral[filtro] 
-        
+
                     else:
                         dados_mapa_vazio = dados_geral.copy()
-                    
+
                     pontos = dados_mapa_vazio.drop_duplicates(['hospital'])
-            
+
                     mapa_vazio = folium.Map([-8.3831638, -37.7753284], zoom_start=7)
 
-                    
+
                     for latitude, longitude, hospital, endereco  in zip(pontos['latitude_hospital'], pontos['longitude_hospital'], pontos['hospital'], pontos['endereco']):
                         folium.Marker(
                             location= [latitude, longitude],
@@ -172,10 +172,10 @@ with col2:
                         popup=ceatox_html,              
                         icon=folium.Icon(color="lightblue",icon="hospital",prefix="fa"),
                     ).add_to(mapa_vazio)
-                    
-                    
-                    
-                    
+
+
+
+
 
                     st.subheader('Todos os hospitais')
                     st_data = folium_static(mapa_vazio, width=710, height=400)
@@ -192,5 +192,3 @@ with creditos:
         st.image('https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-ufpe-2-2.jpg',width=100)
     with col8:
         st.image('doc/deptEngBio.png', width=150)
-   
-           
