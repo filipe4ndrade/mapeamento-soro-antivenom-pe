@@ -183,7 +183,7 @@ with creditos:
     col6,espaco3,col7,col8,espaco4 = st.columns([7,2,1,1,1])  
     with col6:
          st.write('Aplicação desenvolvida pelo Departamento de Engenharia Biomédica da Universidade Federal de Pernambuco.')
-         st.write('Integrantes: José Filipe....')
+         st.write('Colaboradores: José Filipe Silva de Andrade, Fábio Matheus Spindola da Cunha, Cristine Martins Gomes de Gusmão e Josenildo Costa da Silva.')
     with col7:
         st.image('https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-ufpe-2-2.jpg',width=100)
     with col8:
